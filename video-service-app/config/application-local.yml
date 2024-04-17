@@ -1,0 +1,11 @@
+
+aws:
+  profile: video-local
+  region: us-east-1
+  archive-bucket: osint-media-archive
+  media-live:
+    access-role-arn: <REPLACE-ME>
+
+  cloud-front:
+    # This is the CloudFront>Policies>cache>Managed-Elemental-MediaPackage id
+    cache-policy-id: <REPLACE-ME>

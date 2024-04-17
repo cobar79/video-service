@@ -1,0 +1,8 @@
+server:
+  port: 18101
+
+spring:
+  application:
+    name: video-service-test
+  profiles:
+    active: ait

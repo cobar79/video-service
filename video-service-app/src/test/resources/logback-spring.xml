@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- SHOULD WE GO BACK TO INTERNAL RESOURCES you can refer to properties for log file name-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <springProperty name = "appName" source= "spring.application.name"/>
+
+
+    <springProfile name="ait">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <withJansi>false</withJansi>
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}.%M) - %msg %n</pattern>
+            </encoder>
+        </appender>
+        <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./target/logs/${appName}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>target/logs/archived/${appName}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <totalSizeCap>10GB</totalSizeCap>
+                <maxHistory>5</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <!--   https://logback.qos.ch/manual/layouts.html         -->
+                <pattern>%n%d{yyyy-dd-MM HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{75}.%M) - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <logger name="org.springframework" level="info"/>
+        <logger name="com.bar.dp.gdelt" level="debug"/>
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE-ROLLING"/>
+        </root>
+    </springProfile>
+
+</configuration>

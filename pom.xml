@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>com.bar.osi</groupId>
+	<artifactId>video-service-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>video-service-parent</name>
+	<description>OSINT Video Service</description>
+	<packaging>pom</packaging>
+
+	<properties>
+		<java.version>17</java.version>
+		<maven.compiler.release>17</maven.compiler.release>
+	</properties>
+
+	<modules>
+		<module>video-service-app</module>
+	</modules>
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>artifactory-repo</name>
+			<url>${internal-repository}</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>maven2</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>codice</id>
+			<name>Codice Repository</name>
+			<url>https://artifacts.connexta.com/content/repositories/releases/</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>central</id>
+			<name>artifactory-repo</name>
+			<url>${internal-repository}</url>
+		</repository>
+	</distributionManagement>
+
+</project>

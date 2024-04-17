@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- SHOULD WE GO BACK TO INTERNAL RESOURCES you can refer to properties for log file name-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <springProperty name = "appName" source= "spring.application.name"/>
+
+    <springProfile name="local-file">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <withJansi>false</withJansi>
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}.%M) - %msg %n</pattern>
+            </encoder>
+        </appender>
+        <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./logs/${appName}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>logs/archived/${appName}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <totalSizeCap>10GB</totalSizeCap>
+                <maxHistory>5</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <!--   https://logback.qos.ch/manual/layouts.html         -->
+                <pattern>%n%d{yyyy-dd-MM HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{75}.%M) - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <logger name="org.springframework" level="info"/>
+        <logger name="com.bar.osi.gdelt" level="debug"/>
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE-ROLLING"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="local,dev,test,prod">
+        <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>
+                    %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+                </pattern>
+            </encoder>
+        </appender>
+        <appender name="OpenTelemetry"
+                  class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+            <captureExperimentalAttributes>true</captureExperimentalAttributes>
+            <captureKeyValuePairAttributes>true</captureKeyValuePairAttributes>
+            <captureCodeAttributes>true</captureCodeAttributes>
+            <captureMarkerAttribute>true</captureMarkerAttribute>
+            <captureMdcAttributes>*</captureMdcAttributes>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="console"/>
+            <appender-ref ref="OpenTelemetry"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="default">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <withJansi>false</withJansi>
+            <encoder>
+                <pattern>%highlight(...) %msg%n</pattern>
+            </encoder>
+        </appender>
+        <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>./logs/${appName}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>logs/archived/${appName}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <totalSizeCap>10GB</totalSizeCap>
+                <maxHistory>5</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <!--   https://logback.qos.ch/manual/layouts.html         -->
+                <pattern>%n%d{yyyy-dd-MM HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{75}.%M) - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <logger name="org.springframework" level="info"/>
+        <logger name="com.bar.dp" level="info"/>
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE-ROLLING"/>
+        </root>
+    </springProfile>
+
+</configuration>

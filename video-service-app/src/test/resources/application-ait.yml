@@ -1,0 +1,17 @@
+aws:
+  profile: osi-local
+  region: us-east-1
+#  archive-bucket: <CHANGE-ME>
+  archive-bucket: osint-media-archive
+  media-live:
+#    access-role-arn: <REPLACE-ME>
+    access-role-arn: arn:aws:iam::500225802521:role/MediaLiveAccessRole
+  cloud-front:
+    # This is the CloudFront>Policies>cache>Managed-Elemental-MediaPackage id
+#    cache-policy-id: <REPLACE-ME>
+    cache-policy-id: 08627262-05a9-4f76-9ded-b50ca2e3a84f
+
+logging:
+  level:
+    com.bar: DEBUG
+    software.amazon.awssdk: DEBUG
