@@ -1,5 +1,6 @@
 package com.bar.osi.video.service.impl;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -186,10 +187,21 @@ public class MediaLiveServiceImpl extends MediaService implements MediaLiveServi
 
 	@Override
 	public DescribeInputResponse deleteInput(String inputId) {
+		//Deleting it without wait works, but leaves security group blowing up since it is not idle and there isn't
+		//a waiter for deleting security group until idle.
+//		mediaLiveClient.deleteInput(DeleteInputRequest.builder().inputId(inputId).build());
+
 		DescribeInputResponse describeInputResponse = waitTillInputDetached(inputId);
 		log.info("{}:: input state {}", describeInputResponse.id(), describeInputResponse.state());
 		DescribeInputResponse deleteResponse;
-		try (MediaLiveWaiter mlWaiter = MediaLiveWaiter.builder().client(mediaLiveClient).build()) {
+		try (MediaLiveWaiter mlWaiter = MediaLiveWaiter.builder()
+			.client(mediaLiveClient)
+			.overrideConfiguration(override -> override
+				.waitTimeout(Duration.ofSeconds(120))
+				.maxAttempts(21)
+				.build())
+			.build()
+		) {
 			ResponseOrException<DescribeInputResponse> responseOrException = mlWaiter
 				.waitUntilInputDeleted(builder -> builder.inputId(inputId))
 				.matched();
